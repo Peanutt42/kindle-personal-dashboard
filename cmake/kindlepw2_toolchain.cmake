@@ -1,0 +1,41 @@
+
+# by default at ~/x-tools
+set(KINDLE_XTOOLS_DIR "$ENV{HOME}/x-tools" CACHE PATH
+	"Base directory of x-tools toolchains")
+
+
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+
+# Compilers
+set(KINDLE_TARGET		arm-kindlepw2-linux-gnueabi)
+set(KINDLE_TOOLCHAIN	${KINDLE_XTOOLS_DIR}/arm-kindlepw2-linux-gnueabi)
+set(KINDLE_SYSROOT		${KINDLE_TOOLCHAIN}/${KINDLE_TARGET}/sysroot)
+
+set(CMAKE_C_COMPILER   ${KINDLE_TOOLCHAIN}/bin/${KINDLE_TARGET}-gcc)
+set(CMAKE_CXX_COMPILER ${KINDLE_TOOLCHAIN}/bin/${KINDLE_TARGET}-g++)
+set(CMAKE_ASM_COMPILER ${KINDLE_TOOLCHAIN}/bin/${KINDLE_TARGET}-gcc)
+
+# Sysroot + search
+set(CMAKE_SYSROOT ${KINDLE_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${KINDLE_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+
+# Sensible flags
+set(CMAKE_C_FLAGS_INIT   "--sysroot=${KINDLE_SYSROOT}")
+set(CMAKE_CXX_FLAGS_INIT "--sysroot=${KINDLE_SYSROOT}")
+set(CMAKE_EXE_LINKER_FLAGS_INIT   "--sysroot=${KINDLE_SYSROOT}")
+set(CMAKE_SHARED_LINKER_FLAGS_INIT "--sysroot=${KINDLE_SYSROOT}")
+
+# Make pkg-config discover target .pc files inside the sysroot
+set(ENV{PKG_CONFIG_PATH} "")
+if(DEFINED ENV{PKG_CONFIG})
+	set(PKG_CONFIG_EXECUTABLE "$ENV{PKG_CONFIG}" CACHE FILEPATH "")
+endif()
+set(ENV{PKG_CONFIG_SYSROOT_DIR} "${KINDLE_SYSROOT}")
+set(ENV{PKG_CONFIG_LIBDIR}
+	"${KINDLE_SYSROOT}/usr/lib/pkgconfig:${KINDLE_SYSROOT}/usr/share/pkgconfig")
+

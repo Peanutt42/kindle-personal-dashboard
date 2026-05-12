@@ -1,0 +1,65 @@
+{
+  "$schema": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json",
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23
+  },
+  "configurePresets": [
+    {
+      "name": "local",
+      "displayName": "Local native development",
+      "description": "Used to test on a proper native desktop machine",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "local_release",
+      "inherits": ["local"],
+      "binaryDir": "${sourceDir}/build_release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "kindlepw2",
+      "displayName": "Kindle Paperwhite 2 (Gen 6)",
+      "description": "Used to actually ship the app to the Kindle PW2",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build_kindlepw2",
+      "toolchainFile": "${sourceDir}/cmake/kindlepw2_toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "kindlepw2_debug",
+      "inherits": ["kindlepw2"],
+      "binaryDir": "${sourceDir}/build_kindlepw2_debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "local",
+      "configurePreset": "local"
+    },
+    {
+      "name": "local_release",
+      "configurePreset": "local_release"
+    },
+    {
+      "name": "kindlepw2",
+      "configurePreset": "kindlepw2"
+    },
+    {
+      "name": "kindlepw2_debug",
+      "configurePreset": "kindlepw2_debug"
+    }
+  ]
+}
