@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
+
 project(kindle_personal_dashboard)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -17,7 +18,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK IMPORTED_TARGET REQUIRED gtk+-2.0)
 
 
-add_subdirectory(./rust_foo)
+# rust kindle_personal_dashboard_core library
+add_subdirectory(./core)
 
 
 # kindle_personal_dashboard
@@ -48,11 +50,42 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 
 	-fstack-protector-strong
 
-	-fvisibility=hidden)
+	-fvisibility=hidden
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-	"${CMAKE_CURRENT_SOURCE_DIR}/include")
+	"${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::GTK rust_foo)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	kindle_personal_dashboard_core
+	PkgConfig::GTK
+)
 
 target_link_options(${PROJECT_NAME} PRIVATE -Wl,--gc-sections)
+
+
+# Bundling
+set(KPD_BUNDLE_DIR "${CMAKE_BINARY_DIR}/bundle")
+add_custom_target(bundle_kindle_personal_dashboard
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+
+	COMMAND ${CMAKE_COMMAND} -E make_directory ${KPD_BUNDLE_DIR}
+
+	COMMAND ${CMAKE_COMMAND} -E make_directory "${KPD_BUNDLE_DIR}/bin/"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+		$<TARGET_FILE:kindle_personal_dashboard>
+		"${KPD_BUNDLE_DIR}/bin/"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_SOURCE_DIR}/assets/config.xml"
+		"${KPD_BUNDLE_DIR}/"
+
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_SOURCE_DIR}/assets/menu.json"
+		"${KPD_BUNDLE_DIR}/"
+
+	COMMAND ${CMAKE_COMMAND} -E
+		echo "Bundled kindle-personal-dashboard into ${KPD_BUNDLE_DIR}/"
+)

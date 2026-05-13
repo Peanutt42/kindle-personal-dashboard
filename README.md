@@ -12,7 +12,7 @@
   (should be installed in `~/x-tools/`, can be overriden by adding `-DKINDLE_XTOOLS_DIR=/my/custom/path/to/x-tools/` when configuring with cmake)
 - C++ compiler capable of C++-17
 - rust (with cargo installed), with edition 2024 support
-- rust target `arm-unknown-linux-gnueabi`
+- rust target `arm-unknown-linux-gnueabi` if you want to crosscompile to the Kindle Paperwhite 2
   
   (run `rustup target add arm-unknown-linux-gnueabi` if not yet installed)
 
@@ -49,9 +49,20 @@ cmake --build --preset=YOURPRESET -j
 
 ## Installing on a Kindle
 
-After compiling, the executable should be in `./build_<preset>/kindle_personal_dashboard`.
-Copy it to the kindles `/mnt/us/extensions` rootfs (or simply into the `extensions` directory when plugging the Kindle in over USB).
-At last, launch kterm and execute `kindle_personal_dashboard`.
+After compiling, copy the contents of `./build_<preset>/bundle/*` into `extensions/kindle-personal-dashboard/` (`/mnt/us/extensions/kindle-personal-dashboard/` over ssh).
+
+It should look like this:
+
+```
+$ tree /mnt/us/extensions/kindle-personal-dashboard/
+/mnt/us/extensions/kindle-personal-dashboard/
+├── bin
+│   └── kindle_personal_dashboard
+├── config.xml
+└── menu.json
+```
+
+Then you can launch using the KUAL menu `Kindle Personal Dashboard`.
 
 ## Example usage for Kindle Paperwhite 2:
 

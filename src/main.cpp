@@ -2,7 +2,7 @@
 
 #include "kindle_awm_helper.hpp"
 
-#include "rust_foo/rust_foo.h"
+#include "kindle_personal_dashboard_core.h"
 
 constexpr static const char* KDP_AWM_TITLE = KINDLE_AWM_TITLE(
 	KINDLE_AWM_LAYER_APP,
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 	GtkWidget* window = nullptr;
 	GtkWidget* button = nullptr;
 
-	rust_foo();
+	kindle_personal_dashboard_core_foo();
 
 	gtk_init(&argc, &argv);
 

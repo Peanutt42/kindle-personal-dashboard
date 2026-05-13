@@ -55,11 +55,13 @@
     },
     {
       "name": "kindlepw2",
-      "configurePreset": "kindlepw2"
+      "configurePreset": "kindlepw2",
+      "targets": ["bundle_kindle_personal_dashboard"]
     },
     {
       "name": "kindlepw2_debug",
-      "configurePreset": "kindlepw2_debug"
+      "configurePreset": "kindlepw2_debug",
+      "targets": ["bundle_kindle_personal_dashboard"]
     }
   ]
 }

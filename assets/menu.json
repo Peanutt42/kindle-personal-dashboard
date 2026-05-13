@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "name": "Kindle Personal Dashboard",
+      "priority": 1,
+      "action": "./bin/kindle_personal_dashboard > /tmp/kindle_personal_dashboard.log 2>&1",
+      "refresh": false,
+      "status": false,
+      "exitmenu": false
+    }
+  ]
+}
