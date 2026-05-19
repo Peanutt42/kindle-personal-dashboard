@@ -25,6 +25,6 @@ Checks: >
   -misc-use-anonymous-namespace,
   -misc-no-recursion
 
-HeaderFilterRegex: '.*'
-WarningsAsErrors: true
+HeaderFilterRegex: '.*kindle-personal-dashboard/include/kpd/.*'
+WarningsAsErrors: '*'
 UseColor: true

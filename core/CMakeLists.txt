@@ -20,10 +20,13 @@ FetchContent_MakeAvailable(Corrosion)
 corrosion_import_crate(
 	MANIFEST_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cargo.toml"
 )
+if (KPD_LOCAL_DEV)
+	corrosion_set_features(kindle_personal_dashboard_core FEATURES "local_dev")
+endif()
 
 corrosion_experimental_cbindgen(
 	TARGET kindle_personal_dashboard_core
 	HEADER_NAME "kindle_personal_dashboard_core.h"
-	FLAGS --lang c++
+	FLAGS --config "${CMAKE_CURRENT_SOURCE_DIR}/cbindgen.toml"
 )
 

@@ -1,0 +1,3 @@
+leak:libgtk
+leak:libgobject
+leak:libglib

@@ -1,34 +1,41 @@
 # Kindle Personal Dashboard
 
-## Requirements
+## Supported Devices
 
-- Jailbroken Kindle
-  
-  see <https://kindlemodding.org/jailbreaking/index.html>
+Currently only tested on Kindle Paperwhite 2 (6. Generation).
+Compiling for different models only requires a slightly adjusted `./cmake/kindle*_toolchain.cmake`.
+
+If you need instructions on how to jailbreak your Kindle, go to <https://kindlemodding.org/jailbreaking/index.html>.
+
+## Building from source: Requirements
+
+### Using nix
+
+You only need to setup the Kindle Sdk, everything else is provided by the nixShell:
+
+```bash
+nix develop
+```
+
+### Bare-bones requirements
+
 - Kindle SDK along with koxtoolchain
 
   see <https://kindlemodding.org/kindle-dev/gtk-tutorial/prerequisites.html> for documentation (i suggest building the toolchain and sdk in a debain vm / container for less headaches)
   
   (should be installed in `~/x-tools/`, can be overriden by adding `-DKINDLE_XTOOLS_DIR=/my/custom/path/to/x-tools/` when configuring with cmake)
+
 - C++ compiler capable of C++-17
 - rust (with cargo installed), with edition 2024 support
 - rust target `arm-unknown-linux-gnueabi` if you want to crosscompile to the Kindle Paperwhite 2
   
   (run `rustup target add arm-unknown-linux-gnueabi` if not yet installed)
 
-## Supported Devices
+- clang-tidy if you want to lint
 
-Currently only tested on Kindle Paperwhite 2 (6. Generation).
-Compiling for different models only requires a slightly adjusted `./cmake/kindle*_toolchain.cmake`.
+## Building from source: Compiling
 
-## Building from source
-
-if using nix / NixOS, you only need to setup the Kindle Sdk, everything else is in the nixShell:
-```bash
-nix develop
-```
-
-there are currently two cmake profiles:
+These are the possible cmake profiles:
 
 - `local` (for local host development)
 - `local_release` (optimized variant)
@@ -47,6 +54,8 @@ cmake --preset=YOURPRESET
 cmake --build --preset=YOURPRESET -j
 ```
 
+The output will be in `./build/` or `./build_release` for `local*` presets and `./build_YOURPRESET/` otherwise.
+
 ## Installing on a Kindle
 
 After compiling, copy the contents of `./build_<preset>/bundle/*` into `extensions/kindle-personal-dashboard/` (`/mnt/us/extensions/kindle-personal-dashboard/` over ssh).
@@ -64,41 +73,57 @@ $ tree /mnt/us/extensions/kindle-personal-dashboard/
 
 Then you can launch using the KUAL menu `Kindle Personal Dashboard`.
 
-## Example usage for Kindle Paperwhite 2:
+### Example usage for Kindle Paperwhite 2:
 
 ```bash
 cmake --preset=kindlepw2
 cmake --build --preset=kindlepw2 -j
-scp ./build_kindlepw2/kindle_personal_dashboard root@YOUR_KINDLES_IP:/mnt/us/extensions/
+scp -r ./build_kindlepw2/bundle/* root@YOUR_KINDLES_IP:/mnt/us/extensions/kindle-personal-dashboard/
 ```
 
-Tada!
+Thats it!
 
 ## Development
 
-There are some quality of life improvements when using justfile:
+- quality of life improvements when using justfile:
 
-```bash
-$ just --list
-Available recipes:
-    build preset="local"                     # compile with preset
-    configure preset="local"                 # configure cmake with preset
-    run                                      # runs locally on host machine
-    upload kindle_ip kindle_type="kindlepw2" # compiles and uploads binary to kindle over ssh
-```
+	```bash
+	$ just --list
+	Available recipes:
+    	build preset="local"                     # compile with preset
+    	configure preset="local" *cmake_args=""  # configure cmake with preset
+    	lint preset="local"                      # lints using run-clang-tidy
+    	run preset="local"                       # runs locally on host machine
+    	upload kindle_ip kindle_type="kindlepw2" # compiles and uploads binary to kindle over ssh
+	```
 
-So for quick testing locally: `just run`
+	So for quick testing locally: `just run`
 
-and for quick testing on actual Kindle: `just upload 192.168.0.xyz`
+	and for quick testing on actual Kindle: `just upload 192.168.0.xyz`
 
-To run clang-format manually:
+- clang-format (manually, normally automatically by your IDE)
 
-```bash
-clang-format -i ./include/**.hpp ./src/**.cpp
-```
+	```bash
+	clang-format -i ./include/**.hpp ./src/**.cpp
+	```
 
-To run clang-tidy manually:
+- clang-tidy
 
-```bash
-clang-tidy -p ./build/ ./src/**.cpp
-```
+    enable by setting the `KPD_ENABLE_CLANG_TIDY` definition to `ON` when configuring cmake:
+
+    ```bash
+    cmake --preset=YOURPRESET -DKPD_ENABLE_CLANG_TIDY=ON
+    ```
+
+    or using just:
+
+    ```bash
+    just configure YOURPRESET -DKPD_ENABLE_CLANG_TIDY=ON
+    ```
+
+- address sanitizer
+
+	```bash
+	just configure local -DKPD_ENABLE_ASAN=On
+	ASAN_OPTIONS=detect_leaks=1 LSAN_OPTIONS=suppressions=./tools/asan/gtk.supp just run
+	```

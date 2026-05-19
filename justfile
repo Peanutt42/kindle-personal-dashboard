@@ -1,7 +1,7 @@
 
 # configure cmake with preset
-configure preset="local":
-	cmake --preset={{preset}}
+configure preset="local" *cmake_args="":
+	cmake --preset={{preset}} {{cmake_args}}
 
 # compile with preset
 build preset="local":
@@ -21,7 +21,10 @@ run preset="local":
 	} else {
 		"./build_" + preset + "/kindle_personal_dashboard"
 	}}}
-	
+
+# lints using run-clang-tidy
+lint preset="local":
+	cmake --build --preset={{preset}} -j --target lint
 
 # compiles and uploads binary to kindle over ssh
 upload kindle_ip kindle_type="kindlepw2":

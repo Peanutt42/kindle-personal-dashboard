@@ -9,9 +9,16 @@ crate-type = ["staticlib", "rlib"]
 [build-dependencies]
 cbindgen = "0.29.2"
 
+[features]
+local_dev = []
+
 
 [profile.release]
+opt-level = 2
 lto = true
 codegen-units = 1
 panic = "abort"
 strip = true
+
+[dependencies]
+thiserror = "2.0.18"
