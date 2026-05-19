@@ -11,6 +11,13 @@ set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 
+find_program(CCACHE_EXE "ccache")
+if (CCACHE_EXE)
+	message(STATUS "Using ccache: ${CCACHE_EXE}")
+	set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_EXE})
+	set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_EXE})
+endif()
+
 # GTK+-2.0
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK IMPORTED_TARGET REQUIRED gtk+-2.0)
@@ -76,27 +83,29 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 # Linting: clang-tidy
 option(KPD_ENABLE_CLANG_TIDY "Enable clang-tidy for kindle-personal-dashboard")
-if (CMAKE_CROSSCOMPILING)
-	message(WARNING
-		"KPD_ENABLE_CLANG_TIDY enabled but ignored while cross-compiling"
-	)
-elseif (KPD_ENABLE_CLANG_TIDY)
-	find_program(CLANG_TIDY_EXE "clang-tidy")
-	if (CLANG_TIDY_EXE)
-		if (CMAKE_CROSSCOMPILING)
-			message(WARNING
+if (KPD_ENABLE_CLANG_TIDY)
+	if (CMAKE_CROSSCOMPILING)
+		message(WARNING
+			"KPD_ENABLE_CLANG_TIDY enabled but ignored while cross-compiling"
+		)
+	else()
+		find_program(CLANG_TIDY_EXE "clang-tidy")
+		if (CLANG_TIDY_EXE)
+			if (CMAKE_CROSSCOMPILING)
+				message(WARNING
 				"KPD_ENABLE_CLANG_TIDY enabled but ignored while cross-compiling"
 			)
-		else()
-			message(STATUS "Using clang-tidy: ${CLANG_TIDY_EXE}")
-			set_target_properties(${PROJECT_NAME} PROPERTIES
+			else()
+				message(STATUS "Using clang-tidy: ${CLANG_TIDY_EXE}")
+				set_target_properties(${PROJECT_NAME} PROPERTIES
 				CXX_CLANG_TIDY ${CLANG_TIDY_EXE}
 			)
-		endif()
-	else()
-		message(WARNING
+			endif()
+		else()
+			message(WARNING
 			"KPD_ENABLE_CLANG_TIDY enabled but could not find clang-tidy!"
 		)
+		endif()
 	endif()
 endif()
 

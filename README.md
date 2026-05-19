@@ -31,7 +31,11 @@ nix develop
   
   (run `rustup target add arm-unknown-linux-gnueabi` if not yet installed)
 
+Optional requirements:
+
 - clang-tidy if you want to lint
+
+- ccache for faster rebuilds
 
 ## Building from source: Compiling
 
