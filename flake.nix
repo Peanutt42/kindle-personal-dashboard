@@ -41,8 +41,24 @@
 
             clang-tools # clang-tidy
 
-            gtk2
+            # gtk2 libs for native host
             gtk2.dev
+            libsysprof-capture
+            pcre2.dev
+            util-linux.dev # mount package
+            libselinux.dev
+            glib.dev
+            libsepol.dev
+            fribidi.dev
+            libthai.dev
+            libdatrie.dev
+            expat.dev
+            libxdmcp.dev
+            libdeflate
+            lerc.dev
+            xz.dev
+            zstd.dev
+            libwebp
           ];
         };
       }
