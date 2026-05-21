@@ -4,6 +4,7 @@
 # - CMAKE_SYSTEM_NAME
 # - CMAKE_SYSTEM_PROCESSOR
 # - KINDLE_TARGET
+# - KINDLE_ARCH_FLAGS
 # - Rust_CARGO_TARGET
 
 if (NOT DEFINED CMAKE_SYSTEM_NAME)
@@ -30,7 +31,8 @@ if (NOT KINDLE_TOOLCHAIN_MESSAGES_LOGGED)
 endif()
 
 # Variables that can be set (depending on the build environment):
-# - KINDLE_XTOOLS_DIR
+# - KINDLE_XTOOLS_DIR:
+#   to override the default ~/x-tools/ directory used to cross-compile
 
 
 
@@ -73,10 +75,18 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 # Sensible flags
-set(CMAKE_C_FLAGS_INIT   "--sysroot=${KINDLE_SYSROOT}")
-set(CMAKE_CXX_FLAGS_INIT "--sysroot=${KINDLE_SYSROOT}")
-set(CMAKE_EXE_LINKER_FLAGS_INIT   "--sysroot=${KINDLE_SYSROOT}")
-set(CMAKE_SHARED_LINKER_FLAGS_INIT "--sysroot=${KINDLE_SYSROOT}")
+set(CMAKE_C_FLAGS_INIT
+	"--sysroot=${KINDLE_SYSROOT} ${KINDLE_ARCH_FLAGS}"
+)
+set(CMAKE_CXX_FLAGS_INIT
+	"--sysroot=${KINDLE_SYSROOT} ${KINDLE_ARCH_FLAGS}"
+)
+set(CMAKE_EXE_LINKER_FLAGS_INIT
+	"--sysroot=${KINDLE_SYSROOT} ${KINDLE_ARCH_FLAGS}"
+)
+set(CMAKE_SHARED_LINKER_FLAGS_INIT
+	"--sysroot=${KINDLE_SYSROOT} ${KINDLE_ARCH_FLAGS}"
+)
 
 include_directories(BEFORE "${CMAKE_FIND_ROOT_PATH}/usr/include")
 

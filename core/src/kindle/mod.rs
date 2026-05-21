@@ -3,14 +3,12 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum KindleScreensaverError {
     #[error(
-        "failed to query if screensaver is enabled because of unknown output of {cmd}: stdout={}, stderr={}",
-        String::from_utf8_lossy(stdout_output),
-        String::from_utf8_lossy(stderr_output)
+        "failed to query if screensaver is enabled because of unknown output of {cmd}: stdout={stdout_output}, stderr={stderr_output}"
     )]
     UnknownOutputOfLipcGetProp {
         cmd: String,
-        stdout_output: Vec<u8>,
-        stderr_output: Vec<u8>,
+        stdout_output: String,
+        stderr_output: String,
     },
     #[error(
 		"{cmd} exited unsuccessfully with exit code {} while {while_doing}",

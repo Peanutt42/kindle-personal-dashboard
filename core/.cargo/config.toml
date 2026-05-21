@@ -1,0 +1,6 @@
+[target.arm-unknown-linux-gnueabi]
+rustflags = [
+	"-C", "target-cpu=cortex-a9",
+	# unstable feature but improves floating point operations very much on Kindle PW2
+	"-C", "target-feature=+neon"
+]

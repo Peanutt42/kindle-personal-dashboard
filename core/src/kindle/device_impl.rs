@@ -35,10 +35,13 @@ pub fn is_kindle_automatic_screensaver_blocked() -> Result<bool, KindleScreensav
     } else if output.stdout == [b'0'] {
         Ok(false)
     } else {
+        let stdout_output = String::from_utf8_lossy(&output.stdout).to_string();
+        let stderr_output = String::from_utf8_lossy(&output.stderr).to_string();
+
         Err(KindleScreensaverError::UnknownOutputOfLipcGetProp {
             cmd,
-            stdout_output: output.stdout,
-            stderr_output: output.stderr,
+            stdout_output,
+            stderr_output,
         })
     }
 }

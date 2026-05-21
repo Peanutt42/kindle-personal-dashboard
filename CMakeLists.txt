@@ -4,11 +4,19 @@ project(kindle_personal_dashboard)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_C_FLAGS_DEBUG "-Og -g3 -fno-omit-frame-pointer")
-set(CMAKE_CXX_FLAGS_DEBUG "-Og -g3 -fno-omit-frame-pointer")
+set(CMAKE_C_FLAGS_DEBUG
+	"${CMAKE_C_FLAGS_DEBUG} -Og -g3 -fno-omit-frame-pointer"
+)
+set(CMAKE_CXX_FLAGS_DEBUG
+	"${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -fno-omit-frame-pointer"
+)
 
-set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+set(CMAKE_C_FLAGS_RELEASE
+	"${CMAKE_C_FLAGS_RELEASE} -O3 -DNDEBUG -ffast-math -ftree-vectorize"
+)
+set(CMAKE_CXX_FLAGS_RELEASE
+	"${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG -ffast-math -ftree-vectorize"
+)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 
 find_program(CCACHE_EXE "ccache")
@@ -31,6 +39,7 @@ add_subdirectory(./core)
 add_executable(${PROJECT_NAME}
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/getauxval_fix.cpp"
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
@@ -57,6 +66,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 	-Wnon-virtual-dtor
 	-Wold-style-cast
 	-Woverloaded-virtual
+
+	-fno-rtti
+	-fno-exceptions
 
 	-ffunction-sections
 	-fdata-sections
