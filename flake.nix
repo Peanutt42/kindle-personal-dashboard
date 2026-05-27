@@ -60,6 +60,12 @@
             zstd.dev
             libwebp
           ];
+
+          buildInputs = with pkgs; [
+            libclang.lib # for bindgen (see ./core/build.rs)
+          ];
+
+          shellHook = "export LIBCLANG_PATH=${pkgs.libclang.lib}/lib";
         };
       }
     );

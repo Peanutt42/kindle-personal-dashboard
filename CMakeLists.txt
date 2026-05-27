@@ -39,6 +39,7 @@ add_subdirectory(./core)
 add_executable(${PROJECT_NAME}
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/gh_heatmap.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/getauxval_fix.cpp"
 )
 

@@ -2,18 +2,20 @@
 
 #include "window.hpp"
 
+#include <memory>
+
 using namespace kpd;
 
 int main(int argc, char* argv[]) {
 	gtk_init(&argc, &argv);
 
-	core::State* rust_state = core::kpd_state_new();
+	std::shared_ptr<core::State> core_state(
+		core::kpd_core_state_new(), &core::kpd_core_state_delete
+	);
 
-	Window window;
+	Window window(std::move(core_state));
 
 	window.run();
-
-	core::kpd_state_delete(rust_state);
 
 	return 0;
 }
