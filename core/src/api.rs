@@ -36,6 +36,15 @@ pub unsafe extern "C" fn kpd_core_state_get_gh_heatmap_contribution_week_levels(
 }
 
 #[unsafe(no_mangle)]
+pub extern "C" fn kpd_core_state_refresh(state: *mut State) {
+    assert!(!state.is_null());
+
+    unsafe {
+        state.as_mut().unwrap().refresh();
+    }
+}
+
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn kpd_core_state_delete(state: *mut State) {
     if !state.is_null() {
         unsafe {

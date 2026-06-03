@@ -18,6 +18,8 @@ class Window {
 
 	void update_automatic_screensaver_blocked_label(bool blocked);
 
+	void refresh_state();
+
   private:
 	GtkWidget* window = nullptr;
 	GtkWidget* quit_button = nullptr;
@@ -27,6 +29,9 @@ class Window {
 		);
 	GtkWidget* automatic_screensaver_blocked_label = nullptr;
 	GtkWidget* toggle_automatic_screensaver_blocked_button = nullptr;
+	GtkWidget* refresh_button = nullptr;
+
+	std::shared_ptr<core::State> state;
 
 	GHHeatmap gh_heatmap;
 

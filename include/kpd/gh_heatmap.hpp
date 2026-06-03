@@ -13,6 +13,9 @@ class GHHeatmap {
 
 	GtkWidget* get_widget() { return this->drawing_area; }
 
+	// should get called when the `core_state` changes
+	void invalidate();
+
   private:
 	std::shared_ptr<core::State> core_state;
 	GtkWidget* drawing_area = nullptr;

@@ -1,4 +1,5 @@
 use crate::KindleScreensaverError;
+use std::path::PathBuf;
 use std::process::Command;
 
 pub fn is_kindle_automatic_screensaver_blocked() -> Result<bool, KindleScreensaverError> {
@@ -81,6 +82,10 @@ pub fn set_kindle_automatic_screensaver_blocked(
             cause,
         }),
     }
+}
+
+pub fn get_config_filepath() -> PathBuf {
+    PathBuf::from("/mnt/us/extensions/kindle-personal-dashboard/kpd_config.toml")
 }
 
 fn format_cmd(program: &str, args: &[&str]) -> String {

@@ -17,7 +17,7 @@
 namespace kpd {
 
 Window::Window(std::shared_ptr<core::State> core_state)
-	: gh_heatmap(std::move(core_state)) {
+	: state(core_state), gh_heatmap(std::move(core_state)) {
 	// NOLINTNEXTLINE(cppcoreguidelines-prefer-member-initializer)
 	this->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -82,6 +82,7 @@ Window::Window(std::shared_ptr<core::State> core_state)
 		gtk_label_new(this->automatic_screensaver_blocked_text.c_str());
 	this->toggle_automatic_screensaver_blocked_button =
 		gtk_button_new_with_label("Toggle Automatic Screensaver Blocking");
+	this->refresh_button = gtk_button_new_with_label("Refresh");
 	// NOLINTEND(cppcoreguidelines-prefer-member-initializer)
 
 	gtk_box_pack_start(GTK_BOX(vbox), this->quit_button, TRUE, TRUE, 0);
@@ -92,9 +93,14 @@ Window::Window(std::shared_ptr<core::State> core_state)
 		GTK_BOX(vbox), this->toggle_automatic_screensaver_blocked_button, TRUE,
 		TRUE, 0
 	);
+	gtk_box_pack_start(GTK_BOX(vbox), this->refresh_button, TRUE, TRUE, 0);
 	gtk_box_pack_start(
 		GTK_BOX(vbox), this->gh_heatmap.get_widget(), FALSE, TRUE, 0
 	);
+
+	g_signal_connect_clicked_lambda(this->refresh_button, [this]() {
+		this->refresh_state();
+	});
 
 	g_signal_connect_clicked_lambda(this->quit_button, []() {
 		gtk_main_quit();
@@ -127,6 +133,12 @@ void Window::update_automatic_screensaver_blocked_label(bool blocked) {
 		GTK_LABEL(this->automatic_screensaver_blocked_label),
 		this->automatic_screensaver_blocked_text.c_str()
 	);
+}
+
+void Window::refresh_state() {
+	core::kpd_core_state_refresh(this->state.get());
+
+	this->gh_heatmap.invalidate();
 }
 
 const char* Window::_get_automatic_screensaver_blocked_text(bool blocked) {

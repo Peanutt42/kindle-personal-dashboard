@@ -12,7 +12,13 @@ use google_tasks1::{
 };
 use http_body_util::{BodyExt, combinators::BoxBody};
 use scraper::{Html, Selector};
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GHHeatmapConfig {
+    pub username: String,
+}
 
 #[derive(Debug, Error)]
 pub enum FetchGithubContributionsHeatmapError {
@@ -45,11 +51,21 @@ pub struct ContributionWeek {
     pub contribution_levels: Vec<u8>,
 }
 
-pub async fn fetch_github_contributions_heatmap(
-    username: &str,
+pub fn get_empty_gh_contributions_heatmap() -> Vec<ContributionWeek> {
+    (0..53)
+        .map(|_| ContributionWeek {
+            // unused
+            sunday_date: chrono::Local::now().date_naive(),
+            contribution_levels: vec![0; 7],
+        })
+        .collect()
+}
+
+pub async fn fetch_gh_contributions_heatmap(
+    config: &GHHeatmapConfig,
 ) -> Result<Vec<ContributionWeek>, FetchGithubContributionsHeatmapError> {
     let html = fetch_html(
-        format!("https://github.com/users/{username}/contributions")
+        format!("https://github.com/users/{}/contributions", config.username)
             .parse::<Uri>()
             .unwrap(),
     )

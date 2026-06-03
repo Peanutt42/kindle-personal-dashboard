@@ -163,6 +163,10 @@ add_custom_target(bundle_kindle_personal_dashboard
 		"${CMAKE_CURRENT_SOURCE_DIR}/assets/menu.json"
 		"${KPD_BUNDLE_DIR}/"
 
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_SOURCE_DIR}/assets/kpd_config.toml"
+		"${KPD_BUNDLE_DIR}/"
+
 	COMMAND ${CMAKE_COMMAND} -E
 		echo "Bundled kindle-personal-dashboard into ${KPD_BUNDLE_DIR}/"
 )

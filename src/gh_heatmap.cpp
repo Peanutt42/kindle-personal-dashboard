@@ -102,4 +102,6 @@ void GHHeatmap::configure_layout(GdkWindow* window) {
 	gtk_widget_queue_draw(this->drawing_area);
 }
 
+void GHHeatmap::invalidate() { gtk_widget_queue_draw(this->drawing_area); }
+
 } // namespace kpd

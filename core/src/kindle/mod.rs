@@ -31,12 +31,14 @@ pub enum KindleScreensaverError {
 mod device_impl;
 #[cfg(not(feature = "local_dev"))]
 pub use device_impl::{
-    is_kindle_automatic_screensaver_blocked, set_kindle_automatic_screensaver_blocked,
+    get_config_filepath, is_kindle_automatic_screensaver_blocked,
+    set_kindle_automatic_screensaver_blocked,
 };
 
 #[cfg(feature = "local_dev")]
 mod local_dev_impl;
 #[cfg(feature = "local_dev")]
 pub use local_dev_impl::{
-    is_kindle_automatic_screensaver_blocked, set_kindle_automatic_screensaver_blocked,
+    get_config_filepath, is_kindle_automatic_screensaver_blocked,
+    set_kindle_automatic_screensaver_blocked,
 };
