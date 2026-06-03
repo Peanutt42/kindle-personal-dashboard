@@ -23,6 +23,7 @@
         };
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           targets = [ "arm-unknown-linux-gnueabi" ];
+          extensions = [ "rust-src" ];
         };
       in
       {
@@ -31,6 +32,7 @@
 
           nativeBuildInputs = with pkgs; [
             rustToolchain
+            rust-analyzer
 
             pkg-config
             cmake
